@@ -20,7 +20,7 @@ Bookmark.prototype.addSyncData =  function(syncData){
 // Add A location to a Bookmark object
 Bookmark.prototype.addLocation =  function(newLocation){
   if(newLocation === "" || newLocation === null) {return;}
-  for(i=0; i < this.locations.length; i++){
+  for(i = 0; i < this.locations.length; i++){
     if (newLocation == this.locations[i]) {
       return;
     }
@@ -30,8 +30,8 @@ Bookmark.prototype.addLocation =  function(newLocation){
 
 Bookmark.prototype.removeLocation = function(locationToRemove){
   var i = 0;
-  while(i < this.locations.length){
-    if (locationToRemove == this.locations[i]) {
+  while(i < this.locations.length) {
+    if (locationToRemove === this.locations[i]) {
       this.locations.splice(i,1);
     } else {
       i = i + 1;
@@ -89,6 +89,9 @@ LocationList.prototype.getLocations = function(callback) {
 LocationList.prototype.setLocations = function() {
   if (this.blocked) {alert(localize('ActionInProgress')); return;} else { this.blocked = true;  }
   var self = this;
+  
+  // TODO Add geo position
+  
   chrome.storage.sync.set({"locations": self.locations},function(){
     self.blocked = false;
     self.updateFunction();
@@ -185,4 +188,29 @@ BookmarkList.prototype.save =  function(){
     self.blocked = false;
     self.updateFunction();
   });
+};
+
+function LocationGeoPositioner() {
+  this.ready = false;
+  this.geoSelectedLocation = null;
+  navigator.geolocation.getCurrentPosition(function(data){
+    // for each locations saved cordinates
+    // determine if it is within range of the current location
+    // if it is set is as geoSelectedLocation
+    this.ready = true;
+  });
+};
+
+LocationGeoPositioner.determineLocation == function (long1,lat1,long2,lat2) {
+    var R = 6371; // km
+    var dLat = (lat2-lat1).toRad();
+    var dLon = (lon2-lon1).toRad();
+    var lat1 = lat1.toRad();
+    var lat2 = lat2.toRad();
+    
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c;
+    return d < 0.5;
 };

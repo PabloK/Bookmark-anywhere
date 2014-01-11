@@ -43,6 +43,7 @@
   ],
   "permissions": [
     "bookmarks",
-    "storage"
+    "storage",
+    "geolocation"
   ]
 }
