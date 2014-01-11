@@ -3,6 +3,9 @@
     <h4 ng-bind="lz('Locations')"></h4>
   </div>
 </div>
+
+<!-- Location settings -->
+
 <div class="row">
   <div class="col-md-4">
     <div class="input-group">
@@ -45,39 +48,36 @@
       <img id="loader" ng-show="locations.blocked" class="check-element animate-show" src="../../img/ajax-loader.gif">
   </div>
 </div>
+
+<!-- Advanced Location settings -->
+<!-- Todo localize these settings -->
+<div class="row">
+  <div class="col-md-12">
+    <hr />
+    <div ng-show="showAdvanced">
+      <label>
+          <input type="checkbox"/>
+          <span ng-bind="'Use geo location as current location'"></span>
+      </label>
+    </div>
+    <a class="small pointer" 
+       ng-click="showAdvanced = !showAdvanced" 
+       ng-bind="showAdvanced ? 'Hide advanced settings ...' : 'Show advanced settings ...' "></a>
+  </div>
+</div>
+
 <br />
+
 <div class="row">
   <div class="col-md-8">
     <h4 ng-bind="lz('BookmarkSettings')"></h4>
   </div>
 </div>
 
-<div class="row well header">
-  <span class="col-md-4">
-    <div class="input-group">
-      <button 
-              tooltip-placement="right" 
-              tooltip="{{lz('SaveTip')}}"
-              tooltip-append-to-body="true"
-              ng-click="saveBookmarks()" 
-              class="addtooltip btn btn-default" 
-              >
-      <span ng-bind="lz('Save')"></span>
-      </button>
-      <!--
-      <button 
-              tooltip-placement="bottom" 
-              tooltip="{{lz('ClearSelectionTip')}}" 
-              tooltip-append-to-body="true"
-              ng-click="clearSelections()" 
-              class="addtooltip btn btn-default" 
-              >
-        &nbsp;<span class="glyphicon glyphicon-unchecked"></span>&nbsp;
-      </button>
-      -->
-    </div>
-  </span>  
+<!-- Bookmark settings -->
 
+<div class="row well header">
+  
   <span class="col-md-4">
     <div class="input-group">
       <input ui-keydown="{esc: 'removeSearchText()', enter: 'selectFilteredBookmarks()'}" type="text" placeholder="{{lz('Search')}}" ng-model="searchText" class="form-control" />
@@ -128,7 +128,35 @@
     </div>
   </span>
   
+  <span class="col-md-4">
+    <span class="clearfix"></span>
+    <div class="input-group pull-right">
+      <button 
+              tooltip-placement="right" 
+              tooltip="{{lz('SaveTip')}}"
+              tooltip-append-to-body="true"
+              ng-click="saveBookmarks()" 
+              class="addtooltip btn btn-default" 
+              >
+      <span ng-bind="lz('Save')"></span>
+      </button>
+      <!--
+      <button 
+              tooltip-placement="bottom" 
+              tooltip="{{lz('ClearSelectionTip')}}" 
+              tooltip-append-to-body="true"
+              ng-click="clearSelections()" 
+              class="addtooltip btn btn-default" 
+              >
+        &nbsp;<span class="glyphicon glyphicon-unchecked"></span>&nbsp;
+      </button>
+      -->
+    </div>
+  </span>
+  
 </div>
+
+<!-- Bookmarks -->
 
 <div class="row">
   <div class="col-md-12">
