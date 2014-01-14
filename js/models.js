@@ -1,12 +1,14 @@
 function Bookmark (chromeBookmark) {
+  console.log(chromeBookmark);
   this.id = chromeBookmark.id;
   this.title = chromeBookmark.title;
   this.url = chromeBookmark.url;
   this.selected = false;
-  this.parent = chromeBookmark.parentId;
+  this.parentId = chromeBookmark.parentId;
   this.dateAdded = chromeBookmark.dateAdded;
-  this.previousparentid = null;
+  this.prevParentID = null;
   this.locations = [];
+  this.hidden = false;
 }
 // for identification
 Bookmark.prototype.toString = function() { return "Bookmark"};
@@ -14,7 +16,7 @@ Bookmark.prototype.toString = function() { return "Bookmark"};
 // Apply sync data
 Bookmark.prototype.addSyncData =  function(syncData){
   this.locations = syncData.locations;  
-  this.previousparentid = syncData.previousparentid;
+  this.prevParentID = syncData.prevParentID;
 };
 
 // Add A location to a Bookmark object
@@ -172,12 +174,13 @@ BookmarkList.prototype.bookmarkTreeToListOfBookmarks = function (node) {
 
 // Save all
 BookmarkList.prototype.save =  function(){
+  // Restore bookmarks that used to have labels from sync
   if (this.blocked) {alert(localize('ActionInProgress')); return;} else { this.blocked = true;  }
   var sync = {};
   for (i=0;i < this.bookmarks.length;i++){
     tempBookmark = this.bookmarks[i];
     if (tempBookmark.locations.length > 0){
-      sync[tempBookmark.id] = {locations: tempBookmark.locations, previousparentid: tempBookmark.parent}; 
+      sync[tempBookmark.id] = tempBookmark; 
     }
   }
   var self = this;

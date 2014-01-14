@@ -41,7 +41,7 @@ describe("BookmarkList", function() {
       },75);
     });
 
-    it("it should save chnages made to bookmarks when save is called", function(done) {
+    it("it should save changes made to bookmarks when save is called", function(done) {
       var temp = JSON.parse(storage.bookmarks)
       expect(temp[2].locations.length).toBe(3);
       done();
@@ -61,7 +61,7 @@ describe("BookmarkList", function() {
       },50);
     });
 
-    it("it should not save chnages made to bookmarks when save is not called", function(done) {
+    it("it should not save changes made to bookmarks when save is not called", function(done) {
       var temp = JSON.parse(storage.bookmarks)
       expect(temp[2].locations.length).toBe(2);
       done();

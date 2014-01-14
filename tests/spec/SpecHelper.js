@@ -4,7 +4,7 @@ storage = {
             locations: JSON.stringify([]),
             bookmarks: JSON.stringify({"2" :{
                         locations:["Home","Work"], 
-                        previousparentid: "1"
+                        prevParentId: "1"
                       }})
           };
 });

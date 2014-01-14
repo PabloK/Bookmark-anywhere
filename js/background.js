@@ -1,17 +1,5 @@
-// Models
-InactiveFolder = function(){
-  this.folder = null;
-};
-InactiveFolder.prototype.set = function (folder) {
-    this.folder = folder;
-  };
-InactiveFolder.prototype.get = function(){
-  return this.folder;
-};
-
 // Initialize
 var appId = chrome.runtime.id;
-var inactiveFolder = new InactiveFolder();
 
 // Helpers
 // Search array for string key
@@ -21,57 +9,46 @@ function hasValue (arr,value) {
   return false;
 }
 
-// Recursively search for the first occourence of title
-function traverseFindBookmark(node, searchString) {
-  if (node.title == searchString) {      
-      return node;
-  }
-  for (key in node.children) {  
-    ret = traverseFindBookmark(node.children[key], searchString);
-    if (ret != null) {
-      return ret; 
-    }
-  }
-  return null;
-}
-
 // Hide and show bookmarks
 function hideShowBookmarks() {
   console.log("Checking Bookmarks");
-  if (inactiveFolder.get() == null){
-    alert(chrome.i18n.getMessage("folderCreationTimeout"));
-    throw chrome.i18n.getMessage("folderCreationTimeout");
-  }
   chrome.storage.sync.get('bookmarks',function(data){
     var sbookmarks = data.bookmarks
-    chrome.storage.local.get('currentlocation',function(data){
-      var currentlocation = data.currentlocation;
-      for(key in sbookmarks){
-        var newLocation = key;
-        if(!hasValue(sbookmarks[key].locations,currentlocation)){
-            newLocation = inactiveFolder.folder.id;
+    var bookmarksToRemove = [];    
+      
+      chrome.storage.local.get('currentlocation',function(data){
+        var currentlocation = data.currentlocation;
+        for (var key in sbookmarks) {
+          console.log(key);
+          console.log(sbookmarks);
+          if (sbookmarks[key].location == null) { continue; }
+          if (sbookmarks[key].location.length == 0) { continue; }
+          
+          var isInCurrentLocation = hasValue(sbookmarks[key].location,currentlocation);
+          
+          if(sbookmarks[key].hidden && isInCurrentLocation) {
+            // create the bookmark on the bar
+            console.log('create on bar');
+            continue;
+          } 
+            
+          if(sbookmarks[key].parentId != 1 && isInCurrentLocation) {
+            // if the bookmark is not already on the bar move it there.
+            console.log('move to bar');
+            continue;
+          } 
+          
+          if(!sbookmarks[key].hidden && !isInCurrentLocation) {
+            console.log('remove');
+            continue;
+          } 
+        
         }
-        if(hasValue(sbookmarks[key].locations,currentlocation)){
-            newLocation = '1';        
-        }
-        chrome.bookmarks.move(key,{parentId: newLocation});
-      }
+        
+        // Update the list of bookmarks to be removed
     });
   });
 }
-
-// Add the inactive folder
-chrome.bookmarks.getTree(function(data){
-  inactiveFolder.set(traverseFindBookmark(data[0], appId));
-  if(inactiveFolder.get() == null) {
-     chrome.bookmarks.create({ title : appId, parentId : "2"}, function(data) {
-        inactiveFolder.set(data);
-        hideShowBookmarks(); 
-     });
-    return;
-  }
-  hideShowBookmarks(); 
-});
 
 //Handlers
 // Handle storage change
@@ -80,3 +57,5 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
     hideShowBookmarks(); 
   }
 });
+
+hideShowBookmarks();

@@ -133,9 +133,9 @@
 <div class="row">
   <div class="col-md-12">
     <div class="list-group">
-      <div ng-repeat="bookmark in filteredBookmarks =  (bl.bookmarks | orderBy:'parent' | filter: searchText)">
+      <div ng-repeat="bookmark in filteredBookmarks =  (bl.bookmarks | orderBy:'parentId' | filter: searchText)">
         <li 
-            ng-class="{active : bookmark.selected, bokmarkbar: bookmark.parent != 1}" 
+            ng-class="{active : bookmark.selected, bokmarkbar: bookmark.parentId != 1}" 
             class="list-group-item" >
           <label>
             <input ng-model="bookmark.selected" type="checkbox"/>
